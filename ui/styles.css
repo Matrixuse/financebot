@@ -1,0 +1,53 @@
+.main {
+    background: linear-gradient(180deg,#020617,#0f172a);
+}
+
+/* Title */
+h1 {
+    font-weight:700;
+    color:#e2e8f0;
+}
+
+/* Input fields */
+.stTextInput input {
+    background-color:#1e293b;
+    color:white;
+    border-radius:10px;
+}
+
+/* Dropdown */
+.stSelectbox div {
+    background-color:#1e293b;
+}
+
+/* Buttons */
+.stButton button {
+    background:linear-gradient(90deg,#2563eb,#4f46e5);
+    color:white;
+    border-radius:8px;
+    border:none;
+    padding:10px 18px;
+    font-weight:600;
+}
+
+/* Question Card */
+.quiz-card {
+    background:#1e293b;
+    padding:18px;
+    border-radius:12px;
+    border-left:4px solid #3b82f6;
+}
+
+/* Dashboard Cards */
+.metric-card {
+    background:#1e293b;
+    padding:15px;
+    border-radius:12px;
+}
+
+/* Weak Topic Badge */
+.weak-topic {
+    background:#f59e0b33;
+    padding:10px;
+    border-radius:8px;
+}
