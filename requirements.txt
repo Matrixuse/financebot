@@ -8,3 +8,4 @@ groq
 scikit-learn
 python-dotenv
 sentence-transformers
+torch
