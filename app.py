@@ -5,8 +5,8 @@ from src.quiz_generator import generate_question
 from src.evaluator import evaluate
 from src.evaluator import tutor_explain
 from ui.dashboard import show_dashboard
-import pandas as pd
-import matplotlib.pyplot as plt
+def show_chart():
+    import pandas as pd
 import re
 import base64
 
