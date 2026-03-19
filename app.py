@@ -4,7 +4,13 @@ from src.tutor_engine import get_context
 from src.quiz_generator import generate_question
 from src.evaluator import evaluate, tutor_explain
 from ui.dashboard import show_dashboard
-from PyPDF2 import PdfReader
+
+pdf_support = True
+try:
+    from PyPDF2 import PdfReader
+except ModuleNotFoundError:
+    pdf_support = False
+
 import pandas as pd
 import re
 import base64
@@ -280,7 +286,14 @@ with left:
         type=["pdf"]
     )
 
+    if not pdf_support and uploaded_file is not None:
+        st.warning("PDF upload requires PyPDF2, which is not installed. Please install dependencies and re-deploy to enable this feature.")
+        uploaded_file = None
+
     def read_pdf(file):
+        if not pdf_support:
+            raise RuntimeError("PyPDF2 unavailable")
+
         reader = PdfReader(file)
         text = ""
 
