@@ -2,9 +2,9 @@ import streamlit as st
 from auth import register_user, login_user
 from src.tutor_engine import get_context
 from src.quiz_generator import generate_question
-from src.evaluator import evaluate
-from src.evaluator import tutor_explain
+from src.evaluator import evaluate, tutor_explain
 from ui.dashboard import show_dashboard
+from PyPDF2 import PdfReader
 import pandas as pd
 import re
 import base64
@@ -14,6 +14,12 @@ if "logged_in" not in st.session_state:
 
 if "page" not in st.session_state:
     st.session_state.page = "landing"
+
+if "scores" not in st.session_state:
+    st.session_state.scores = []
+
+if "weak_topics" not in st.session_state:
+    st.session_state.weak_topics = []
     
 st.markdown("""
 <style>
@@ -269,6 +275,20 @@ with left:
 
     topic = st.text_input("Enter Finance Topic")
 
+    uploaded_file = st.file_uploader(
+        "Or upload a PDF document",
+        type=["pdf"]
+    )
+
+    def read_pdf(file):
+        reader = PdfReader(file)
+        text = ""
+
+        for page in reader.pages:
+            text += page.extract_text() or ""
+
+        return text
+
     difficulty = st.selectbox(
         "Select Difficulty",
         ["Beginner","Intermediate","Advanced"]
@@ -277,12 +297,27 @@ with left:
     if st.button("Generate Question"):
 
         if not st.session_state.logged_in:
-            st.info("Login to unlock personalized AI finance quizzes and tracking.")
-        else:
+            st.info("Login to unlock personalized AI finance quizzes.")
+            st.stop()
+
+        # Case 1: PDF uploaded
+        if uploaded_file is not None:
+            pdf_text = read_pdf(uploaded_file)
+
+            if len(pdf_text.strip()) == 0:
+                st.error("Could not read PDF properly")
+                st.stop()
+
+            context = pdf_text[:3000]  # limit size (important)
+
+        # Case 2: Text input
+        elif topic.strip() != "":
             context = get_context(topic)
-            question = generate_question(context, difficulty)
-        
-        context = get_context(topic)
+
+        else:
+            st.warning("Enter topic or upload PDF")
+            st.stop()
+
         question = generate_question(context, difficulty)
 
         st.session_state.question = question
@@ -315,30 +350,17 @@ with left:
 
     try:
         if "result" in locals():
-
             score_match = re.search(r"\d+", result)
 
             if score_match:
                 score = int(score_match.group())
-
                 st.session_state.scores.append(score)
 
                 if score < 5:
                     st.session_state.weak_topics.append(
                         st.session_state.topic
                     )
-
-        if score_match:
-            score = int(score_match.group())
-
-            st.session_state.scores.append(score)
-
-            if score < 5:
-                st.session_state.weak_topics.append(
-                    st.session_state.topic
-                )
-
-    except:
+    except Exception:
         pass
 
 with separator:
