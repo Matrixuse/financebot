@@ -34,7 +34,7 @@ Develop an interactive AI-driven educational bot that:
 ## Tech Stack
 
 1. **Programming Language**: Python
-2. **Frontend/UI**: Python, HTML, CSS
+2. **Frontend/UI**: Python, HTML, CSS (Gradio-based UI)
 3. **Backend**: Groq API (LLaMA 3.1 - 8B Instant)
 4. **Database**: FAISS (Vector Database)
 5. **Embeddings**: Custom Embedding Function (generate_embedding)
@@ -46,26 +46,37 @@ Develop an interactive AI-driven educational bot that:
 1. User interacts with chatbot UI
 2. Question is generated from finance/investment data
 3. User submits answer
-4. LLM evaluates the response
-5. System provides:
+4. Relevant context is retrieved using FAISS
+5. LLM evaluates the response
+6. System provides:
 
    1. Score/feedback
    2. Correct answer
    3. Explanation with context
-6. Learning loop continues
+7. Learning loop continues
 
 ---
 
 ## Project Structure
 
-```
+```bash
 financebot/
-│── app.py                # Main application
-│── chatbot.py           # Chat logic
-│── data/                # Investment reports / datasets
-│── vector_db/           # Embeddings storage
-│── requirements.txt     # Dependencies
-│── README.md            # Project documentation
+│── app.py                    # Main Gradio application (UI + flow control)
+│── chatbot.py               # Handles quiz flow, evaluation, and explanations
+│
+├── src/
+│   │── embeddings.py        # Generates embeddings for text data
+│   │── vector_db.py         # FAISS vector database (build + search functions)
+│
+├── data/
+│   │── finance_data.csv     # Investment reports / finance dataset
+│
+├── vector_db/
+│   │── faiss_index/         # Stored FAISS index files (if persisted)
+│
+├── .env                     # Environment variables (API keys like GROQ_API_KEY)
+├── requirements.txt         # Python dependencies
+└── README.md                # Project documentation
 ```
 
 ---
@@ -74,28 +85,30 @@ financebot/
 
 ### Clone Repository
 
-```
+```bash
 git clone https://github.com/Matrixuse/financebot.git
 cd financebot
 ```
 
 ### Install Dependencies
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
 ### Add API Key
 
-Add your LLM API key in the code:
+Add your Groq API key in the `.env` file:
 
+```env
+GROQ_API_KEY="your_api_key_here"
 ```
-API_KEY = "your_api_key_here"
-```
+
+---
 
 ### Run Application
 
-```
+```bash
 python app.py
 ```
 
@@ -152,4 +165,5 @@ https://github.com/Matrixuse/financebot
 The Finance Quiz/Tutor Bot leverages Generative AI to transform traditional learning into an interactive, intelligent, and adaptive experience, helping users build strong financial knowledge through continuous feedback and assessment.
 
 ---
+
 
